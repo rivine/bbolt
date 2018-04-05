@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/coreos/bbolt"
-	"github.com/coreos/bbolt/cmd/bolt"
+	"github.com/rivine/bbolt"
+	"github.com/rivine/bbolt/cmd/bolt"
 )
 
 // Ensure the "info" command can print information about a database.
