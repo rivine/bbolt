@@ -71,7 +71,7 @@ Shopify and Heroku use Bolt-backed services every day.
 To start using Bolt, install Go and run `go get`:
 
 ```sh
-$ go get github.com/coreos/bbolt/...
+$ go get github.com/rivine/bbolt/...
 ```
 
 This will retrieve the library and install the `bolt` command line utility into
@@ -91,7 +91,7 @@ package main
 import (
 	"log"
 
-	bolt "github.com/coreos/bbolt"
+	bolt "github.com/rivine/bbolt"
 )
 
 func main() {
@@ -534,7 +534,7 @@ this from a read-only transaction, it will perform a hot backup and not block
 your other database reads and writes.
 
 By default, it will use a regular file handle which will utilize the operating
-system's page cache. See the [`Tx`](https://godoc.org/github.com/coreos/bbolt#Tx)
+system's page cache. See the [`Tx`](https://godoc.org/github.com/rivine/bbolt#Tx)
 documentation for information about optimizing for larger-than-RAM datasets.
 
 One common use case is to backup over HTTP so you can use tools like `cURL` to
