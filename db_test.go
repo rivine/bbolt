@@ -590,9 +590,18 @@ func TestDB_Concurrent_WriteTo(t *testing.T) {
 			panic(err)
 		}
 		time.Sleep(time.Duration(rand.Intn(20)+1) * time.Millisecond)
-		tx.WriteTo(f)
-		tx.Rollback()
-		f.Close()
+		_, err = tx.WriteTo(f)
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = tx.Rollback()
+		if err != nil {
+			t.Fatal(err)
+		}
+		err = f.Close()
+		if err != nil {
+			t.Fatal(err)
+		}
 		snap := &DB{nil, f.Name(), o}
 		snap.MustReopen()
 		defer snap.MustClose()

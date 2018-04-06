@@ -2,19 +2,22 @@ BRANCH=`git rev-parse --abbrev-ref HEAD`
 COMMIT=`git rev-parse --short HEAD`
 GOLDFLAGS="-X main.branch $(BRANCH) -X main.commit $(COMMIT)"
 
-default: build
+default: install
+
+install:
+	@go install -v github.com/rivine/bbolt/cmd/bolt
 
 race:
 	@go test -v -race -test.run="TestSimulate_(100op|1000op)"
 
 fmt:
-	!(gofmt -l -s -d $(shell find . -name \*.go) | grep '[a-z]')
+	gofmt -s -l -w .
 
-# go get honnef.co/go/tools/simple
+# go get honnef.co/go/tools/cmd/gosimple
 gosimple:
 	gosimple ./...
 
-# go get honnef.co/go/tools/unused
+# go get honnef.co/go/tools/cmd/unused
 unused:
 	unused ./...
 
@@ -23,8 +26,8 @@ errcheck:
 	@errcheck -ignorepkg=bytes -ignore=os:Remove github.com/rivine/bbolt
 
 test:
-	go test -timeout 20m -v -coverprofile cover.out -covermode atomic
+	go test -timeout 20m -v
 	# Note: gets "program not an importable package" in out of path builds
 	go test -v ./cmd/bolt
 
-.PHONY: race fmt errcheck test gosimple unused
+.PHONY: install race fmt errcheck test gosimple unused

@@ -14,7 +14,12 @@ import (
 // TestTx_Check_ReadOnly tests consistency checking on a ReadOnly database.
 func TestTx_Check_ReadOnly(t *testing.T) {
 	db := MustOpenDB()
-	defer db.Close()
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucket([]byte("widgets"))
 		if err != nil {
@@ -35,7 +40,12 @@ func TestTx_Check_ReadOnly(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer readOnlyDB.Close()
+	defer func() {
+		err := readOnlyDB.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
 
 	tx, err := readOnlyDB.Begin(false)
 	if err != nil {
@@ -45,7 +55,7 @@ func TestTx_Check_ReadOnly(t *testing.T) {
 	numChecks := 2
 	errc := make(chan error, numChecks)
 	check := func() {
-		err, _ := <-tx.Check()
+		err := <-tx.Check()
 		errc <- err
 	}
 	// Ensure the freelist is not reloaded and does not race.
